@@ -10,9 +10,10 @@ A comprehensive guide to Python programming, covering everything from basic synt
 *Software Engineer from Tanzania*
 
 ## Features
-- **Neo-Brutalism Design**: A bold, high-contrast user interface.
+- **Neo-Brutalism Design**: A bold, high-contrast user interface with continuous title animations.
 - **Interactive Learning**: Chapters are served dynamically with a focus on readability.
 - **Mobile Optimized**: Fully responsive design for learning on the go.
+- **Rich Previews**: Optimized for WhatsApp and social media sharing.
 
 ## Tech Stack
 - **Frontend**: React, Vite, Tailwind CSS
