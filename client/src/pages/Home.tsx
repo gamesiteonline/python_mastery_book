@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { ChevronRight, BookOpen, Code2, Zap } from 'lucide-react';
+import { BookOpen, Code2, Zap, MessageCircle } from 'lucide-react';
 import { Streamdown } from 'streamdown';
 
 const chapters = [
@@ -39,6 +37,21 @@ export default function Home() {
   const [chapterContent, setChapterContent] = useState('');
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  // Security measure: Hide contact info in obfuscated format
+  const getSecureContact = () => {
+    const p1 = "255";
+    const p2 = "796";
+    const p3 = "339";
+    const p4 = "436";
+    return `+${p1}${p2}${p3}${p4}`;
+  };
+
+  const handleContact = () => {
+    const num = getSecureContact().replace('+', '');
+    const text = encodeURIComponent("hello can I know more About Python");
+    window.open(`https://wa.me/${num}?text=${text}`, '_blank');
+  };
+
   useEffect(() => {
     const loadChapter = async () => {
       try {
@@ -72,123 +85,122 @@ export default function Home() {
   const prevChapter = selectedChapter > 0 ? chapters[selectedChapter - 1] : null;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background p-4 md:p-8">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
-        <div className="container flex items-center justify-between py-4">
-          <div className="flex items-center gap-3">
-            <img src="/manus-storage/python_mastery_logo_e0851df9.png" alt="Python Mastery" className="h-10 w-10" />
+      <header className="sticky top-0 z-40 bg-white border-4 border-black neo-shadow mb-8">
+        <div className="container flex flex-col md:flex-row items-center justify-between py-6 gap-4">
+          <div className="flex items-center gap-4">
+            <div className="bg-primary p-2 border-2 border-black">
+              <img src="/manus-storage/python_mastery_logo_e0851df9.png" alt="Python Mastery" className="h-12 w-12" />
+            </div>
             <div>
-              <h1 className="text-xl font-bold text-primary">Python Mastery</h1>
-              <p className="text-xs text-muted-foreground">From Fundamentals to Architecture</p>
+              <h1 className="text-2xl font-black">Python Mastery</h1>
+              <p className="text-xs font-bold uppercase">By Fahad Mohamed Malibiche from Tanzania</p>
             </div>
           </div>
-          <div className="text-sm text-muted-foreground">
-            By Fahad Mohamed from Tanzania
-          </div>
+          <button 
+            onClick={handleContact}
+            className="neo-button flex items-center gap-2 bg-secondary"
+          >
+            <MessageCircle className="h-5 w-5" />
+            Contact Author
+          </button>
         </div>
         {/* Progress bar */}
-        <div className="h-1 bg-border">
+        <div className="h-4 bg-white border-t-4 border-black overflow-hidden">
           <div
-            className="h-full bg-primary transition-all duration-300 ease-out"
+            className="h-full bg-accent transition-all duration-300 ease-out"
             style={{ width: `${scrollProgress}%` }}
           />
         </div>
       </header>
 
-      <div className="flex">
+      <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar */}
-        <aside className="hidden lg:flex w-80 flex-col border-r border-border bg-card sticky top-20 h-[calc(100vh-80px)] overflow-y-auto">
-          <div className="p-6 space-y-6">
-            <div>
-              <h2 className="text-sm font-semibold text-primary mb-4 flex items-center gap-2">
-                <BookOpen className="h-4 w-4" />
-                Chapters
-              </h2>
-              <div className="space-y-2">
-                {chapters.map((ch) => (
-                  <button
-                    key={ch.id}
-                    onClick={() => {
-                      setSelectedChapter(ch.id);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-200 ${
-                      selectedChapter === ch.id
-                        ? 'bg-primary text-primary-foreground font-medium'
-                        : 'text-foreground hover:bg-accent hover:text-accent-foreground'
-                    }`}
-                  >
-                    <div className="flex items-start gap-2">
-                      <span className="text-xs font-mono text-muted-foreground mt-0.5 flex-shrink-0">{String(ch.id).padStart(2, '0')}</span>
-                      <span className="line-clamp-2">{ch.title}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
+        <aside className="w-full lg:w-80 flex flex-col bg-white border-4 border-black neo-shadow p-6 h-fit lg:sticky lg:top-40 max-h-[70vh] overflow-y-auto">
+          <h2 className="text-xl font-black mb-6 flex items-center gap-2 border-b-4 border-black pb-2">
+            <BookOpen className="h-6 w-6" />
+            Chapters
+          </h2>
+          <div className="space-y-4">
+            {chapters.map((ch) => (
+              <button
+                key={ch.id}
+                onClick={() => {
+                  setSelectedChapter(ch.id);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`w-full text-left p-3 border-2 border-black font-bold transition-all ${
+                  selectedChapter === ch.id
+                    ? 'bg-primary text-white translate-x-1 translate-y-1 shadow-none'
+                    : 'bg-white hover:bg-secondary neo-shadow-hover'
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-sm font-black">{String(ch.id).padStart(2, '0')}</span>
+                  <span className="uppercase text-xs">{ch.title}</span>
+                </div>
+              </button>
+            ))}
           </div>
         </aside>
 
         {/* Main Content */}
         <main className="flex-1 min-w-0">
-          <div className="container max-w-3xl py-12 px-4 md:px-6">
+          <div className="bg-white border-4 border-black neo-shadow p-6 md:p-12">
             {/* Chapter Header */}
-            <div className="mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
-              <div className="mb-4">
-                <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-                  {currentChapter.section}
-                </span>
+            <div className="mb-12">
+              <div className="inline-block bg-accent text-white px-3 py-1 border-2 border-black font-black uppercase text-sm mb-4">
+                {currentChapter.section}
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              <h1 className="text-4xl md:text-6xl font-black mb-6">
                 {currentChapter.title}
               </h1>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Code2 className="h-4 w-4" />
+              <div className="flex flex-wrap gap-4 text-sm font-bold uppercase">
+                <span className="flex items-center gap-2 bg-muted p-2 border-2 border-black">
+                  <Code2 className="h-5 w-5" />
                   Chapter {String(selectedChapter).padStart(2, '0')}
                 </span>
-                <span className="flex items-center gap-1">
-                  <Zap className="h-4 w-4" />
+                <span className="flex items-center gap-2 bg-muted p-2 border-2 border-black">
+                  <Zap className="h-5 w-5" />
                   {Math.ceil(chapterContent.length / 1000)} min read
                 </span>
               </div>
             </div>
 
             {/* Chapter Content */}
-            <article className="prose prose-sm md:prose-base max-w-none mb-16 animate-in fade-in duration-500 delay-100">
+            <article className="prose prose-lg max-w-none mb-16">
               <Streamdown>{chapterContent}</Streamdown>
             </article>
 
             {/* Navigation */}
-            <div className="border-t border-border pt-8 mt-12">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="border-t-4 border-black pt-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {prevChapter ? (
-                  <Button
-                    variant="outline"
+                  <button
                     onClick={() => {
                       setSelectedChapter(prevChapter.id);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="justify-start"
+                    className="neo-button bg-white text-black text-left"
                   >
-                    <span className="text-xs text-muted-foreground">← Previous</span>
-                    <span className="block text-sm font-medium">{prevChapter.title}</span>
-                  </Button>
+                    <span className="text-xs font-black uppercase block mb-1">← Previous</span>
+                    <span className="block font-black">{prevChapter.title}</span>
+                  </button>
                 ) : (
                   <div />
                 )}
                 {nextChapter ? (
-                  <Button
+                  <button
                     onClick={() => {
                       setSelectedChapter(nextChapter.id);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="justify-end"
+                    className="neo-button bg-primary text-white text-right"
                   >
-                    <span className="block text-sm font-medium text-right">{nextChapter.title}</span>
-                    <span className="text-xs text-primary-foreground">Next →</span>
-                  </Button>
+                    <span className="text-xs font-black uppercase block mb-1 text-white">Next →</span>
+                    <span className="block font-black">{nextChapter.title}</span>
+                  </button>
                 ) : (
                   <div />
                 )}
@@ -197,6 +209,17 @@ export default function Home() {
           </div>
         </main>
       </div>
+      
+      {/* Footer */}
+      <footer className="mt-12 bg-black text-white p-8 border-4 border-black">
+        <div className="container flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="font-black uppercase">© 2026 Fahad Mohamed Malibiche</p>
+          <div className="flex gap-4">
+             <button onClick={handleContact} className="font-black uppercase hover:text-secondary">Contact</button>
+             <span className="font-black uppercase">Tanzania</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
