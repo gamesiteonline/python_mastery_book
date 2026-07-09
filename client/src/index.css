@@ -88,14 +88,16 @@
     transform: translate(2px, 2px);
   }
   .neo-button {
-    @apply px-4 py-2 bg-primary text-primary-foreground font-bold border-2 border-black neo-shadow transition-all;
+    @apply px-4 py-2 bg-primary text-primary-foreground font-bold border-2 border-black transition-all;
+    box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
   }
   .neo-button:active {
     box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
     transform: translate(4px, 4px);
   }
   .neo-card {
-    @apply p-6 bg-white border-2 border-black neo-shadow;
+    @apply p-6 bg-white border-2 border-black;
+    box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
   }
 }
 
@@ -108,7 +110,8 @@
 }
 
 .prose pre {
-  @apply bg-black text-white p-4 neo-shadow;
+  @apply bg-black text-white p-4;
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
 }
 
 .prose code {
