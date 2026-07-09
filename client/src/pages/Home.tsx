@@ -94,7 +94,7 @@ export default function Home() {
               <img src="/manus-storage/python_mastery_logo_e0851df9.png" alt="Python Mastery" className="h-12 w-12" />
             </div>
             <div>
-              <h1 className="text-2xl font-black">Python Mastery</h1>
+              <h1 className="text-2xl font-black animate-neo-loop">Python Mastery</h1>
               <p className="text-xs font-bold uppercase">By Fahad Mohamed Malibiche from Tanzania</p>
             </div>
           </div>

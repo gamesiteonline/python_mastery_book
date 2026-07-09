@@ -114,3 +114,14 @@
 .prose code {
   @apply bg-secondary px-1 font-bold;
 }
+
+@layer utilities {
+  @keyframes neo-wiggle {
+    0%, 100% { transform: rotate(-1deg) scale(1); }
+    50% { transform: rotate(1deg) scale(1.05); }
+  }
+  .animate-neo-loop {
+    animation: neo-wiggle 2s ease-in-out infinite;
+    display: inline-block;
+  }
+}
