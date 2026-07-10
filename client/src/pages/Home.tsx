@@ -68,7 +68,7 @@ export default function Home() {
       
       // Update URL without reloading
       const url = currentItem.slug === '' ? '/' : `/${currentItem.slug}`;
-      window.history.pushState({ id: currentId: currentItem.id }, '', url);
+      window.history.pushState({ id: currentItem.id }, '', url);
     };
     loadContent();
   }, [selectedId]);
