@@ -1,36 +1,36 @@
 import { useState, useEffect } from 'react';
-import { BookOpen, Code2, MessageCircle, Menu, X, ChevronRight, ChevronLeft, Github } from 'lucide-react';
+import { Code2, MessageCircle, Menu, X, ChevronRight, ChevronLeft, Github } from 'lucide-react';
 import { Streamdown } from 'streamdown';
 
 const navigation = [
   {
     title: 'Foundations',
     items: [
-      { id: 0, title: 'Introduction', path: 'introduction.md' },
-      { id: 1, title: 'Philosophy', path: 'chapter_01.md' },
-      { id: 2, title: 'Variables & Memory', path: 'chapter_02.md' },
-      { id: 3, title: 'Control Flow', path: 'chapter_03.md' },
-      { id: 4, title: 'Functions', path: 'chapter_04.md' },
+      { id: 0, title: 'Introduction', path: 'introduction.md', slug: '' },
+      { id: 1, title: 'Philosophy', path: 'chapter_01.md', slug: 'philosophy' },
+      { id: 2, title: 'Variables & Memory', path: 'chapter_02.md', slug: 'variables-memory' },
+      { id: 3, title: 'Control Flow', path: 'chapter_03.md', slug: 'control-flow' },
+      { id: 4, title: 'Functions', path: 'chapter_04.md', slug: 'functions' },
     ]
   },
   {
     title: 'Advanced Concepts',
     items: [
-      { id: 5, title: 'Data Structures', path: 'chapter_05.md' },
-      { id: 6, title: 'Dictionaries & Hash Maps', path: 'chapter_06.md' },
-      { id: 7, title: 'Collections & Itertools', path: 'chapter_07.md' },
-      { id: 8, title: 'OOP: Classes', path: 'chapter_08.md' },
-      { id: 9, title: 'Inheritance & Composition', path: 'chapter_09.md' },
+      { id: 5, title: 'Data Structures', path: 'chapter_05.md', slug: 'data-structures' },
+      { id: 6, title: 'Dictionaries & Hash Maps', path: 'chapter_06.md', slug: 'dictionaries-hashmaps' },
+      { id: 7, title: 'Collections & Itertools', path: 'chapter_07.md', slug: 'collections-itertools' },
+      { id: 8, title: 'OOP: Classes', path: 'chapter_08.md', slug: 'oop-classes' },
+      { id: 9, title: 'Inheritance & Composition', path: 'chapter_09.md', slug: 'inheritance-composition' },
     ]
   },
   {
     title: 'Mastery Mechanics',
     items: [
-      { id: 10, title: 'Magic Methods', path: 'chapter_10.md' },
-      { id: 11, title: 'Functional Python', path: 'chapter_11.md' },
-      { id: 12, title: 'Decorators', path: 'chapter_12.md' },
-      { id: 13, title: 'Generators', path: 'chapter_13.md' },
-      { id: 14, title: 'Context Managers', path: 'chapter_14.md' },
+      { id: 10, title: 'Magic Methods', path: 'chapter_10.md', slug: 'magic-methods' },
+      { id: 11, title: 'Functional Python', path: 'chapter_11.md', slug: 'functional-python' },
+      { id: 12, title: 'Decorators', path: 'chapter_12.md', slug: 'decorators' },
+      { id: 13, title: 'Generators', path: 'chapter_13.md', slug: 'generators' },
+      { id: 14, title: 'Context Managers', path: 'chapter_14.md', slug: 'context-managers' },
     ]
   }
 ];
@@ -38,7 +38,11 @@ const navigation = [
 const allItems = navigation.flatMap(group => group.items);
 
 export default function Home() {
-  const [selectedId, setSelectedId] = useState(0);
+  const [selectedId, setSelectedId] = useState(() => {
+    const path = window.location.pathname.replace(/^\/|\/$/g, '');
+    const found = allItems.find(item => item.slug === path);
+    return found ? found.id : 0;
+  });
   const [content, setContent] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,7 +53,7 @@ export default function Home() {
     const loadContent = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`/${currentItem.path}`);
+        const response = await fetch(`/_content/${currentItem.path}`);
         if (response.ok) {
           const text = await response.text();
           setContent(text);
@@ -61,9 +65,24 @@ export default function Home() {
       }
       setIsLoading(false);
       window.scrollTo(0, 0);
+      
+      // Update URL without reloading
+      const url = currentItem.slug === '' ? '/' : `/${currentItem.slug}`;
+      window.history.pushState({ id: currentId: currentItem.id }, '', url);
     };
     loadContent();
   }, [selectedId]);
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && typeof event.state.id === 'number') {
+        setSelectedId(event.state.id);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const handleContact = () => {
     const num = "255796339436";
@@ -73,7 +92,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Header */}
       <header className="doc-header">
         <div className="flex h-16 items-center justify-between px-6">
           <div className="flex items-center gap-4">
@@ -103,7 +121,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
           className="fixed inset-0 z-10 bg-slate-900/20 backdrop-blur-sm lg:hidden"
@@ -111,7 +128,6 @@ export default function Home() {
         />
       )}
 
-      {/* Sidebar */}
       <aside className={`doc-sidebar ${isSidebarOpen ? 'translate-x-0 block bg-white' : '-translate-x-full lg:translate-x-0'}`}>
         <nav className="space-y-8">
           {navigation.map((group) => (group.items.length > 0 && (
@@ -141,7 +157,6 @@ export default function Home() {
         </nav>
       </aside>
 
-      {/* Main Content */}
       <main className="doc-main">
         <div className="doc-content">
           {isLoading ? (
@@ -154,7 +169,6 @@ export default function Home() {
                 <Streamdown>{content}</Streamdown>
               </article>
 
-              {/* Navigation Footer */}
               <div className="mt-20 flex items-center justify-between border-t border-slate-200 pt-8">
                 {selectedId > 0 ? (
                   <button
@@ -179,7 +193,6 @@ export default function Home() {
           )}
         </div>
 
-        {/* Footer */}
         <footer className="border-t border-slate-200 bg-slate-50 py-12 px-6">
           <div className="max-w-3xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
             <div>
